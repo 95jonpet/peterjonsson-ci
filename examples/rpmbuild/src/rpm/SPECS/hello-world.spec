@@ -2,6 +2,7 @@ Name:       hello-world
 Version:    %{ver}
 Release:    %{rel}
 Summary:    A simple RPM package
+License:    Proprietary
 Source0:    hello-world.sh
 
 %description
