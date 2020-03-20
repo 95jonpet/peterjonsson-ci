@@ -16,8 +16,7 @@ pipeline {
                 }
             }
             steps {
-                // sh 'mvn --batch-mode --errors --fail-at-end --show-version clean test || 0'
-                sh 'mvn clean verify || 0'
+                sh 'mvn --batch-mode --errors --fail-at-end --show-version clean test || 0'
                 junit '**/target/**/*.xml'
             }
         }
