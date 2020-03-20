@@ -1,4 +1,5 @@
 import static java.util.Objects.requireNonNull
+import static se.peterjonsson.jenkins.SharedLibraryConstants.RPMBUILD_TARGET
 
 def call(Map config, Closure body = {}) {
     String version = requireNonNull(config.version, 'version must not be null')
@@ -7,17 +8,17 @@ def call(Map config, Closure body = {}) {
     String specfile = requireNonNull(config.specfile, 'specfile must not be null')
 
     sh """
-        mkdir -p target/rpmbuild-tmp/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-        cp -r "$topdir" "target/rpmbuild-tmp"
+        mkdir -p $RPMBUILD_TARGET/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+        cp -r "$topdir" "$RPMBUILD_TARGET"
     """
 
     body()
 
     sh """
         rpmbuild -bb \
-            --define "_topdir target/rpmbuild-tmp" \
+            --define "_topdir $RPMBUILD_TARGET" \
             --define "ver $version" \
             --define "rel $release" \
-            "target/rpmbuild-tmp/SPECS/$specfile"
+            "$RPMBUILD_TARGET/SPECS/$specfile"
     """
 }
