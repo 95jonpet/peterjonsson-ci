@@ -1,0 +1,20 @@
+#!/usr/bin/env groovy
+
+@Library('peterjonsson-ci')_
+
+pipeline {
+    agent any
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+    }
+    stages {
+        stage('Build') {
+            agent { dockerfile true }
+            steps {
+                rpmbuild(version: '1.0.0', release: '1', topdir: 'src/rpm', specfile: 'hello-world.spec')
+            }
+        }
+    }
+}
