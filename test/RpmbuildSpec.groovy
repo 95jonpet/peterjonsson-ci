@@ -11,15 +11,17 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
     @Test
     def '[rpmbuild] will run rpmbuild with a copied topdir under target/rpmbuild-tmp'() {
         when:
-            rpmbuild version: '1.0.0', release: '1', topdir: topdir, specfile: specfile
+            rpmbuild(version: '1.0.0', release: '1', topdir: topdir, specfile: specfile) {
+                echo 'Inside body.'
+            }
 
-        // TODO Handle absolute specfile -> resolve under target/rpmbuild-tmp by relativizing to topdir and appending to target/rpmbuild-tmp
         then:
             1 * getPipelineMock('sh')({
                 it =~ 'mkdir -p target/rpmbuild-tmp/\\{BUILD,RPMS,SOURCES,SPECS,SRPMS\\}'
                 it =~ /cp -r "$topdir" "target\/rpmbuild-tmp"/
-                it =~ /rpmbuild -bb .* --define "_topdir target\/rpmbuild-tmp" .* $newSpecfile/
             })
+            1 * getPipelineMock('echo')('Inside body.')
+            1 * getPipelineMock('sh')({ it =~ /rpmbuild -bb .* --define "_topdir target\/rpmbuild-tmp" .* $newSpecfile/ })
 
         where:
             topdir                | specfile      | newSpecfile
@@ -30,7 +32,7 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
     @Test
     def '[rpmbuild] will run rpmbuild -bb with version and release variables'() {
         when:
-            rpmbuild version: version, release: release, topdir: topdir, specfile: 'test.spec'
+            rpmbuild(version: version, release: release, topdir: topdir, specfile: 'test.spec')
 
         then:
 			1 * getPipelineMock('sh')({
