@@ -9,14 +9,14 @@ def call(Map config, Closure body = {}) {
 
     sh """
         mkdir -p $RPMBUILD_TARGET/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-        cp -r "$topdir" "$RPMBUILD_TARGET"
+        cp -r "$topdir/." "$RPMBUILD_TARGET"
     """
 
     body()
 
     sh """
         rpmbuild -bb \
-            --define "_topdir $RPMBUILD_TARGET" \
+            --define "_topdir \$(pwd)/$RPMBUILD_TARGET" \
             --define "ver $version" \
             --define "rel $release" \
             "$RPMBUILD_TARGET/SPECS/$specfile"

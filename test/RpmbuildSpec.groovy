@@ -6,10 +6,11 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
 
 	def setup() {
 		rpmbuild = loadPipelineScriptForTest('vars/rpmbuild.groovy')
+        // rpmbuild.getBinding().setVariable('PWD', '/var/lib/jenkins/workspace')
 	}
 
     @Test
-    def '[rpmbuild] will run rpmbuild with a copied topdir under target/rpmbuild-tmp'() {
+    def '[rpmbuild] will run rpmbuild with all files under topdir copied to target/rpmbuild-tmp'() {
         when:
             rpmbuild(version: '1.0.0', release: '1', topdir: topdir, specfile: specfile) {
                 echo 'Inside body.'
@@ -18,10 +19,10 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
         then:
             1 * getPipelineMock('sh')({
                 it =~ 'mkdir -p target/rpmbuild-tmp/\\{BUILD,RPMS,SOURCES,SPECS,SRPMS\\}'
-                it =~ /cp -r "$topdir" "target\/rpmbuild-tmp"/
+                it =~ /cp -r "$topdir\/." "target\/rpmbuild-tmp"/
             })
             1 * getPipelineMock('echo')('Inside body.')
-            1 * getPipelineMock('sh')({ it =~ /rpmbuild -bb .* --define "_topdir target\/rpmbuild-tmp" .* "$newSpecfile"/ })
+            1 * getPipelineMock('sh')({ it =~ /rpmbuild -bb .* --define "_topdir \$\(pwd\)\/target\/rpmbuild-tmp" .* "$newSpecfile"/ })
 
         where:
             topdir                | specfile      | newSpecfile
