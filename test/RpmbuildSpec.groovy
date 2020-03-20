@@ -21,7 +21,7 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
                 it =~ /cp -r "$topdir" "target\/rpmbuild-tmp"/
             })
             1 * getPipelineMock('echo')('Inside body.')
-            1 * getPipelineMock('sh')({ it =~ /rpmbuild -bb .* --define "_topdir target\/rpmbuild-tmp" .* $newSpecfile/ })
+            1 * getPipelineMock('sh')({ it =~ /rpmbuild -bb .* --define "_topdir target\/rpmbuild-tmp" .* "$newSpecfile"/ })
 
         where:
             topdir                | specfile      | newSpecfile
@@ -38,7 +38,7 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
 			1 * getPipelineMock('sh')({
                 it =~ /rpmbuild -bb .* --define "rel ${release}"/
                 it =~ /rpmbuild -bb .* --define "ver ${version}"/
-                it =~ 'rpmbuild -bb .* target/rpmbuild-tmp/SPECS'
+                it =~ 'rpmbuild -bb .* "target/rpmbuild-tmp/SPECS/test.spec"'
             })
 
         where:

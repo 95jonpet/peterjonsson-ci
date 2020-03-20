@@ -1,12 +1,10 @@
-import java.util.Objects
+import static java.util.Objects.requireNonNull
 
 def call(Map config, Closure body = {}) {
-    String version = Objects.requireNonNull(config.version)
-    String release = Objects.requireNonNull(config.release)
-    String topdir = Objects.requireNonNull(config.topdir)
-    String specfile = Objects.requireNonNull(config.specfile)
-
-    String specfilePath = "target/rpmbuild-tmp/SPECS/${specfile}"
+    String version = requireNonNull(config.version, 'version must not be null')
+    String release = requireNonNull(config.release, 'release must not be null')
+    String topdir = requireNonNull(config.topdir, 'topdir must not be null')
+    String specfile = requireNonNull(config.specfile, 'specfile must not be null')
 
     sh """
         mkdir -p target/rpmbuild-tmp/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
@@ -20,6 +18,6 @@ def call(Map config, Closure body = {}) {
             --define "_topdir target/rpmbuild-tmp" \
             --define "ver $version" \
             --define "rel $release" \
-            $specfilePath
+            "target/rpmbuild-tmp/SPECS/$specfile"
     """
 }
