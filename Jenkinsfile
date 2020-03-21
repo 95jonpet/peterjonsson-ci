@@ -17,11 +17,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn --batch-mode --errors --fail-at-end --show-version clean test || 0'
-                junit '**/target/**/*.xml'
-
-                // Load current library version for later use.
                 library "peterjonsson-ci@${env.GIT_BRANCH ?: 'master'}"
+                setVersionFromMaven()
+                runMaven([phases: 'clean test'])
             }
         }
         stage('Integration Tests') {
