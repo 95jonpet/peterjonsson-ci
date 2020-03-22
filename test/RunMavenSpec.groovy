@@ -9,10 +9,10 @@ class RunMavenSpec extends JenkinsPipelineSpecification {
         PJCI_MAVEN_SHA1: ''
     ]
 
-	def setup() {
-		runMaven = loadPipelineScriptForTest('vars/runMaven.groovy')
+    def setup() {
+        runMaven = loadPipelineScriptForTest('vars/runMaven.groovy')
         runMaven.getBinding().setVariable('env', env)
-	}
+    }
 
     @Test
     def '[runMaven] will run mvn with phases clean and verify by default'() {
