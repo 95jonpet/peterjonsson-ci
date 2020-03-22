@@ -38,9 +38,9 @@ class InitMavenPipelineSpec extends JenkinsPipelineSpecification {
         where:
             versionTemplate                   | revision | changelist  | buildNumber | branch   | expectedVersion
             '${revision}${sha1}${changelist}' | '0.1.0'  | '-SNAPSHOT' | 1           | 'master' | '0.1.0-1'
-            '${revision}${sha1}${changelist}' | '0.1.0'  | '-SNAPSHOT' | 1           | 'dev'    | '0.1.0-dev-1-SNAPSHOT'
+            '${revision}${sha1}${changelist}' | '0.1.0'  | '-SNAPSHOT' | 1           | 'dev'    | '0.1.0-dev.1-SNAPSHOT'
             '${revision}${sha1}${changelist}' | '1.0.4'  | '-SNAPSHOT' | 47          | 'master' | '1.0.4-47'
-            '${revision}${sha1}${changelist}' | '1.0.4'  | '-SNAPSHOT' | 47          | 'dev'    | '1.0.4-dev-47-SNAPSHOT'
+            '${revision}${sha1}${changelist}' | '1.0.4'  | '-SNAPSHOT' | 47          | 'dev'    | '1.0.4-dev.47-SNAPSHOT'
             '${revision}${changelist}'        | '7.4.3'  | '-SNAPSHOT' | 1           | 'master' | '7.4.3'
             '${revision}${changelist}'        | '7.4.3'  | '-SNAPSHOT' | 1           | 'dev'    | '7.4.3-SNAPSHOT'
             '${revision}${changelist}'        | '0.4'    | '-SNAPSHOT' | 47          | 'master' | '0.4'

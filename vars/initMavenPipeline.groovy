@@ -10,7 +10,7 @@ def call(Map config = [:]) {
 
     String revision = properties.getProperty('revision', '')
     String changelist = env.BRANCH_NAME != mainBranch ? properties.getProperty('changelist', '-SNAPSHOT') : ''
-    String sha1 = '-' + properties.getProperty('sha1', env.BRANCH_NAME != mainBranch ? "${env.BRANCH_NAME}-${env.BUILD_NUMBER}" : (String) env.BUILD_NUMBER)
+    String sha1 = '-' + properties.getProperty('sha1', env.BRANCH_NAME != mainBranch ? "${env.BRANCH_NAME}.${env.BUILD_NUMBER}" : (String) env.BUILD_NUMBER)
 
     String version = versionTemplate
         .replaceAll('\\$\\{revision\\}', revision)
