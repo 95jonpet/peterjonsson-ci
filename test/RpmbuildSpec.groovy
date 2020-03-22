@@ -4,10 +4,9 @@ import org.junit.Test
 class RpmbuildSpec extends JenkinsPipelineSpecification {
     def rpmbuild = null
 
-	def setup() {
-		rpmbuild = loadPipelineScriptForTest('vars/rpmbuild.groovy')
-        // rpmbuild.getBinding().setVariable('PWD', '/var/lib/jenkins/workspace')
-	}
+    def setup() {
+        rpmbuild = loadPipelineScriptForTest('vars/rpmbuild.groovy')
+    }
 
     @Test
     def '[rpmbuild] will run rpmbuild with all files under topdir copied to target/rpmbuild-tmp'() {
@@ -36,7 +35,7 @@ class RpmbuildSpec extends JenkinsPipelineSpecification {
             rpmbuild(version: version, release: release, topdir: topdir, specfile: 'test.spec')
 
         then:
-			1 * getPipelineMock('sh')({
+            1 * getPipelineMock('sh')({
                 it =~ /rpmbuild -bb .* --define "rel ${release}"/
                 it =~ /rpmbuild -bb .* --define "ver ${version}"/
                 it =~ 'rpmbuild -bb .* "target/rpmbuild-tmp/SPECS/test.spec"'

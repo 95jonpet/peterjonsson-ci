@@ -7,10 +7,10 @@ class InitMavenPipelineSpec extends JenkinsPipelineSpecification {
     def initMavenPipeline = null
     def currentBuild = [:]
 
-	def setup() {
-		initMavenPipeline = loadPipelineScriptForTest('vars/initMavenPipeline.groovy')
+    def setup() {
+        initMavenPipeline = loadPipelineScriptForTest('vars/initMavenPipeline.groovy')
         initMavenPipeline.getBinding().setVariable('currentBuild', currentBuild)
-	}
+    }
 
     @Test
     def '[initMavenPipeline] will set currentBuild.displayName correctly'() {

@@ -4,9 +4,9 @@ import org.junit.Test
 class GenerateRpmbuildPatchSpec extends JenkinsPipelineSpecification {
     def generateRpmbuildPatch = null
 
-	def setup() {
-		generateRpmbuildPatch = loadPipelineScriptForTest('vars/generateRpmbuildPatch.groovy')
-	}
+    def setup() {
+        generateRpmbuildPatch = loadPipelineScriptForTest('vars/generateRpmbuildPatch.groovy')
+    }
 
     @Test
     def '[generateRpmbuildPatch] will run [diff "$original" "$modified" > "$output"]'() {
@@ -14,7 +14,7 @@ class GenerateRpmbuildPatchSpec extends JenkinsPipelineSpecification {
             generateRpmbuildPatch(original: original, modified: modified, output: output)
 
         then:
-			1 * getPipelineMock('sh')({ it =~ /diff .*".*$original" ".*$modified" > ".*$output"/ })
+            1 * getPipelineMock('sh')({ it =~ /diff .*".*$original" ".*$modified" > ".*$output"/ })
 
         where:
             original               | modified          | output

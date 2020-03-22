@@ -8,11 +8,11 @@ class InitPipelineSpec extends JenkinsPipelineSpecification {
     def currentBuild = [:]
     def env = [:]
 
-	def setup() {
-		initPipeline = loadPipelineScriptForTest('vars/initPipeline.groovy')
+    def setup() {
+        initPipeline = loadPipelineScriptForTest('vars/initPipeline.groovy')
         initPipeline.getBinding().setVariable('currentBuild', currentBuild)
         initPipeline.getBinding().setVariable('env', env)
-	}
+    }
 
     @Test
     def '[initPipeline] will set [env.PJCI_MAIN_BRANCH] to mainBranch argument'() {
