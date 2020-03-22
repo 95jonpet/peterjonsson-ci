@@ -18,7 +18,7 @@ pipeline {
             }
             steps {
                 library "peterjonsson-ci@${env.GIT_BRANCH ?: 'master'}"
-                setVersionFromMaven()
+                initPipeline()
                 runMaven([phases: 'clean test'])
             }
         }

@@ -3,21 +3,22 @@ import com.homeaway.devtools.jenkins.testing.JenkinsPipelineSpecification
 import org.apache.maven.model.Model
 import org.junit.Test
 
-class SetVersionFromMavenSpec extends JenkinsPipelineSpecification {
-    def setVersionFromMaven = null
+class InitMavenPipelineSpec extends JenkinsPipelineSpecification {
+    def initMavenPipeline = null
     def currentBuild = [:]
 
 	def setup() {
-		setVersionFromMaven = loadPipelineScriptForTest('vars/setVersionFromMaven.groovy')
-        setVersionFromMaven.getBinding().setVariable('currentBuild', currentBuild)
+		initMavenPipeline = loadPipelineScriptForTest('vars/initMavenPipeline.groovy')
+        initMavenPipeline.getBinding().setVariable('currentBuild', currentBuild)
 	}
 
     @Test
-    def '[setVersionFromMaven] will set currentBuild.displayName correctly'() {
+    def '[initMavenPipeline] will set currentBuild.displayName correctly'() {
         given:
-            setVersionFromMaven.getBinding().setVariable('env', [
+            initMavenPipeline.getBinding().setVariable('env', [
                 BRANCH_NAME: branch,
-                BUILD_NUMBER: buildNumber
+                BUILD_NUMBER: buildNumber,
+                PJCI_MAIN_BRANCH: 'master'
             ])
             Properties properties = new Properties()
             properties.setProperty('revision', revision)
@@ -29,7 +30,7 @@ class SetVersionFromMavenSpec extends JenkinsPipelineSpecification {
             getPipelineMock('readMavenPom')() >> pomModel
 
         when:
-            setVersionFromMaven()
+            initMavenPipeline()
 
         then:
             assert currentBuild.displayName == expectedVersion

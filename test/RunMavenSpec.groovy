@@ -3,9 +3,15 @@ import org.junit.Test
 
 class RunMavenSpec extends JenkinsPipelineSpecification {
     def runMaven = null
+    def env = [
+        PJCI_MAVEN_REVISION: '1.0.0',
+        PJCI_MAVEN_CHANGELIST: '-SNAPSHOT',
+        PJCI_MAVEN_SHA1: ''
+    ]
 
 	def setup() {
 		runMaven = loadPipelineScriptForTest('vars/runMaven.groovy')
+        runMaven.getBinding().setVariable('env', env)
 	}
 
     @Test
@@ -30,31 +36,57 @@ class RunMavenSpec extends JenkinsPipelineSpecification {
     }
 
     @Test
-    def '[runMaven] will pass [-Dchangelist=] to mvn command when on the main branch'() {
+    def '[runMaven] will pass [-Drevision=env.PJCI_MAVEN_REVISION] to mvn command'() {
         given:
             runMaven.getBinding().setVariable('env', [
-                BRANCH_NAME: 'prod'
+                *:env,
+                PJCI_MAVEN_REVISION: revision
             ])
 
         when:
-            runMaven([mainBranch: 'prod'])
+            runMaven()
 
         then:
-            1 * getPipelineMock('sh')({ it =~ /mvn .* -Dchangelist= / })
+            1 * getPipelineMock('sh')({ it =~ /mvn .* -Drevision=$revision / })
+
+        where:
+            revision << ['1.0.0', '0.3', '7.3.8']
     }
 
     @Test
-    def '[runMaven] not pass [-Dchangelist=] to mvn command when not on the main branch'() {
+    def '[runMaven] will pass [-Dsha1=env.PJCI_MAVEN_SHA1] to mvn command'() {
         given:
             runMaven.getBinding().setVariable('env', [
-                BRANCH_NAME: 'dev'
+                *:env,
+                PJCI_MAVEN_SHA1: sha1
             ])
 
         when:
-            runMaven([mainBranch: 'prod'])
+            runMaven()
 
         then:
-            0 * getPipelineMock('sh')({ it =~ /mvn .* -Dchangelist= / })
+            1 * getPipelineMock('sh')({ it =~ /mvn .* -Dsha1=$sha1 / })
+
+        where:
+            sha1 << ['', '-featureX-1', '-1337']
+    }
+
+    @Test
+    def '[runMaven] will pass [-Dchangelist=env.PJCI_MAVEN_CHANGELIST] to mvn command'() {
+        given:
+            runMaven.getBinding().setVariable('env', [
+                *:env,
+                PJCI_MAVEN_CHANGELIST: changelist
+            ])
+
+        when:
+            runMaven()
+
+        then:
+            1 * getPipelineMock('sh')({ it =~ /mvn .* -Dchangelist=$changelist / })
+
+        where:
+            changelist << ['-SNAPSHOT', '']
     }
 
     @Test
